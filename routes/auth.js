@@ -13,7 +13,7 @@ router.post('/register', async (req, res) => {
     email: req.body.email,
     password: CryptoJS.AES.encrypt(
       req.body.password,
-      process.env.SECRET_PASSWORD.toString()
+      process.env.CRYPTOJS_SECRET.toString() // Encrypt password using CryptoJS
     )
   })
 
@@ -29,15 +29,15 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.body.username })
+    const user = await User.findOne({ username: req.body.username }) // Find user in the DB by his username
     !user && res.status(401).json('Wrong credentials!')
 
     const hashedPassword = CryptoJS.AES.decrypt(
       user.password,
-      process.env.SECRET_PASSWORD
-    )
+      process.env.CRYPTOJS_SECRET
+    ) // Decrypt user password
 
-    const decryptedPassword = hashedPassword.toString(CryptoJS.enc.Utf8)
+    const decryptedPassword = hashedPassword.toString(CryptoJS.enc.Utf8) // Convert encoded password to string
 
     decryptedPassword !== req.body.password &&
       res.status(401).json('Wrong credentials!')
@@ -47,13 +47,13 @@ router.post('/login', async (req, res) => {
         id: user._id,
         isAdmin: user.isAdmin
       },
-      process.env.SECRET_JWT,
+      process.env.JWT_KEY,
       { expiresIn: '3d' }
     )
 
     const { password, ...others } = user._doc
 
-    res.status(200).json({ ...others, accessToken })
+    res.status(200).json({ ...others, accessToken }) // Returns all user data (except password) and add accessToken
   } catch (error) {
     res.status(500).json(error)
   }
