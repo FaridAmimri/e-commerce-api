@@ -21,6 +21,4 @@ router.post('/payment', (req, res) => {
   )
 })
 
-console.log(process.env.STRIPE_KEY)
-
 module.exports = router
