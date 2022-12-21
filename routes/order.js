@@ -67,8 +67,8 @@ router.get('/find/:userId', verifyTokenAndAuthorization, async (req, res) => {
 
 // GET Monthly Income
 router.get('/income', verifyTokenAndAdmin, async (req, res) => {
-  const currenteDate = new Date()
-  const lastMonth = new Date(currenteDate.setMonth(currenteDate.getMonth() - 1))
+  const currentDate = new Date()
+  const lastMonth = new Date(currentDate.setMonth(currentDate.getMonth() - 1))
   const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1))
 
   try {
